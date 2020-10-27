@@ -1,23 +1,60 @@
 #!/bin/bash
 read -p "Enter no of times to flip single coin:" n
-declare -A dictionary=( [heads]=0 [tails]=0 )
-for(( flip = 1; flip <= n; flip++ ))
+echo
+declare -A dictionary1=(  [H]=0 [T]=0 )
+echo "Singlet Combination"
+for (( flip = 1; flip <= n; flip++ ))
 do
     echo -n "Flip-$flip is "
     (( toss = RANDOM % 2 ))
     if(( toss == 0 ))
     then
         echo "Heads"
-        (( dictionary[heads]++ ))
+        (( dictionary1[H]++  ))
     else
         echo "Tails"
-        (( dictionary[tails]++ ))
+        (( dictionary1[T]++  ))
     fi
 done
 
-for combination in ${!dictionary[@]}
+
+for combination in ${!dictionary1[@]}
 do
-    count=${dictionary[$combination]}
+    count=${dictionary1[$combination]}
     percentage=$( echo "$count $n" | awk '{printf "%.2f", $1 * 100 / $2}')
     echo "percentage of $combination is $percentage"   
-done 
+done
+
+echo 
+echo "Doublet Combination"
+declare -A dictionary2=( [HH]=0 [HT]=0 [TH]=0 [TT]=0 )
+for(( flip = 1; flip <= n; flip++ ))
+do
+    echo -n "Flip-$flip is "
+    (( toss = RANDOM % 4 ))
+    case $toss in
+        0)
+            echo "Heads Heads"
+            (( dictionary2[HH]++ )) 
+            ;;
+        1)
+            echo "Heads Tails"
+            (( dictionary2[HT]++ ))
+            ;;
+        2)
+            echo "Tails Heads"
+            (( dictionary2[TH]++ ))
+            ;;
+        3)
+            echo "Tails Tails"
+            (( dictionary2[TT]++ ))
+            ;;
+    esac
+done
+
+for combination in ${!dictionary2[@]}
+do
+    count=${dictionary2[$combination]}
+    percentage=$( echo "$count $n" | awk '{printf "%.2f", $1 * 100 / $2}')
+    echo "percentage of $combination is $percentage"   
+done
